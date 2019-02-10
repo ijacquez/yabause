@@ -82,8 +82,8 @@ void VIDSoftVdp1DrawStart(void);
 void VIDSoftVdp1DrawEnd(void);
 void VIDSoftVdp1NormalSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDSoftVdp1ScaledSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
-void VIDSoftVdp1DistortedSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
-void VIDSoftVdp1PolygonDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
+void VIDSoftVdp1DistortedSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wireframe);
+void VIDSoftVdp1PolygonDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wireframe);
 void VIDSoftVdp1PolylineDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDSoftVdp1LineDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDSoftVdp1UserClipping(u8 * ram, Vdp1 * regs);
@@ -2113,7 +2113,7 @@ void VidsoftVdp1Thread(void* data)
       if (vidsoft_vdp1_thread_context.need_draw)
       {
          vidsoft_vdp1_thread_context.need_draw = 0;
-         Vdp1DrawCommands(vidsoft_vdp1_thread_context.ram, &vidsoft_vdp1_thread_context.regs, vidsoft_vdp1_thread_context.back_framebuffer);
+         Vdp1DrawCommands(vidsoft_vdp1_thread_context.ram, &vidsoft_vdp1_thread_context.regs, vidsoft_vdp1_thread_context.back_framebuffer, true);
          memcpy(vdp1backframebuffer, vidsoft_vdp1_thread_context.back_framebuffer, 0x40000);
          vidsoft_vdp1_thread_context.draw_finished = 1;
       }
@@ -2453,7 +2453,7 @@ void VIDSoftVdp1DrawStart()
    else
    {
       VIDSoftVdp1DrawStartBody(Vdp1Regs, vdp1backframebuffer);
-      Vdp1DrawCommands(Vdp1Ram, Vdp1Regs, vdp1backframebuffer);
+      Vdp1DrawCommands(Vdp1Ram, Vdp1Regs, vdp1backframebuffer, true);
    }
 }
 
@@ -3072,6 +3072,19 @@ int is_pre_clipped(s16 tl_x, s16 tl_y, s16 bl_x, s16 bl_y, s16 tr_x, s16 tr_y, s
    return 0;
 }
 
+static void gouraudLineSetup(double * redstep, double * greenstep, double * bluestep, int length, COLOR table1, COLOR table2, u8* ram, Vdp1* regs, vdp1cmd_struct * cmd, u8 * back_framebuffer) {
+
+	gouraudTable(ram ,regs, cmd);
+
+	*redstep =interpolate(table1.r,table2.r,length);
+	*greenstep =interpolate(table1.g,table2.g,length);
+	*bluestep =interpolate(table1.b,table2.b,length);
+
+	leftColumnColor.r = table1.r;
+	leftColumnColor.g = table1.g;
+	leftColumnColor.b = table1.b;
+}
+
 //a real vdp1 draws with arbitrary lines
 //this is why endcodes are possible
 //this is also the reason why half-transparent shading causes moire patterns
@@ -3324,8 +3337,7 @@ void VIDSoftVdp1ScaledSpriteDraw(u8* ram, Vdp1*regs, u8 * back_framebuffer){
    drawQuad(topLeftx, topLefty, bottomLeftx, bottomLefty, topRightx, topRighty, bottomRightx, bottomRighty, ram, regs, &cmd, back_framebuffer);
 }
 
-void VIDSoftVdp1DistortedSpriteDraw(u8* ram, Vdp1*regs, u8 * back_framebuffer) {
-
+void VIDSoftVdp1DistortedSpriteDraw(u8* ram, Vdp1*regs, u8 * back_framebuffer, bool wireframe) {
 	s32 xa,ya,xb,yb,xc,yc,xd,yd;
    vdp1cmd_struct cmd;
 
@@ -3343,20 +3355,29 @@ void VIDSoftVdp1DistortedSpriteDraw(u8* ram, Vdp1*regs, u8 * back_framebuffer) {
     xd = (s32)(cmd.CMDXD + regs->localX);
     yd = (s32)(cmd.CMDYD + regs->localY);
 
-    drawQuad(xa, ya, xd, yd, xb, yb, xc, yc, ram, regs, &cmd, back_framebuffer);
-}
+   Vdp1ReadCommand(&cmd, regs->addr, ram);
 
-static void gouraudLineSetup(double * redstep, double * greenstep, double * bluestep, int length, COLOR table1, COLOR table2, u8* ram, Vdp1* regs, vdp1cmd_struct * cmd, u8 * back_framebuffer) {
+    if (wireframe)
+    {
+        double redstep = 1, greenstep = 1, bluestep = 1;
+        int length;
 
-	gouraudTable(ram ,regs, cmd);
+        length = iterateOverLine(xa, ya, xb, yb, 1, NULL, NULL, regs, &cmd, ram, back_framebuffer);
+        DrawLine(xa, ya, xb, yb, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
 
-	*redstep =interpolate(table1.r,table2.r,length);
-	*greenstep =interpolate(table1.g,table2.g,length);
-	*bluestep =interpolate(table1.b,table2.b,length);
+        length = iterateOverLine(xb, yb, xc, yc, 1, NULL, NULL, regs, &cmd, ram, back_framebuffer);
+        DrawLine(xb, yb, xc, yc, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
 
-	leftColumnColor.r = table1.r;
-	leftColumnColor.g = table1.g;
-	leftColumnColor.b = table1.b;
+        length = iterateOverLine(xc, yc, xd, yd, 1, NULL, NULL, regs, &cmd, ram, back_framebuffer);
+        DrawLine(xd, yd, xc, yc, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
+
+        length = iterateOverLine(xd, yd, xa, ya, 1, NULL, NULL, regs, &cmd, ram, back_framebuffer);
+        DrawLine(xa, ya, xd, yd, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
+    }
+    else
+    {
+        drawQuad(xa, ya, xd, yd, xb, yb, xc, yc, ram, regs, &cmd, back_framebuffer);
+    }
 }
 
 void VIDSoftVdp1PolylineDraw(u8* ram, Vdp1*regs, u8 * back_framebuffer)

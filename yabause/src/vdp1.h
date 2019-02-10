@@ -21,6 +21,8 @@
 #ifndef VDP1_H
 #define VDP1_H
 
+#include <stdbool.h>
+
 #include "memory.h"
 
 #define VIDCORE_DEFAULT         -1
@@ -70,8 +72,8 @@ typedef struct
    void (*Vdp1DrawEnd)(void);
    void(*Vdp1NormalSpriteDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
    void(*Vdp1ScaledSpriteDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
-   void(*Vdp1DistortedSpriteDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
-   void(*Vdp1PolygonDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
+   void(*Vdp1DistortedSpriteDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer, bool wireframe);
+   void(*Vdp1PolygonDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer, bool wireframe);
    void(*Vdp1PolylineDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
    void(*Vdp1LineDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
    void(*Vdp1UserClipping)(u8 * ram, Vdp1 * regs);
@@ -120,7 +122,7 @@ void FASTCALL Sh2Vdp1FrameBufferWriteByte(SH2_struct *sh, u32, u8);
 void FASTCALL Sh2Vdp1FrameBufferWriteWord(SH2_struct *sh, u32, u16);
 void FASTCALL Sh2Vdp1FrameBufferWriteLong(SH2_struct *sh, u32, u32);
 
-void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
+void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wireframe);
 void Vdp1FakeDrawCommands(u8 * ram, Vdp1 * regs);
 
 extern Vdp1 * Vdp1Regs;

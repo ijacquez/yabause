@@ -461,7 +461,7 @@ void FASTCALL Sh2Vdp1WriteLong(SH2_struct *sh, u32 addr, UNUSED u32 val) {
 
 //////////////////////////////////////////////////////////////////////////////
 
-void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer)
+void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wireframe)
 {
    u16 command = T1ReadWord(ram, regs->addr);
    u32 commandCounter = 0;
@@ -480,10 +480,10 @@ void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer)
          case 2: // distorted sprite draw
          case 3: /* this one should be invalid, but some games
                  (Hardcore 4x4 for instance) use it instead of 2 */
-            VIDCore->Vdp1DistortedSpriteDraw(ram, regs, back_framebuffer);
+            VIDCore->Vdp1DistortedSpriteDraw(ram, regs, back_framebuffer, wireframe);
             break;
          case 4: // polygon draw
-            VIDCore->Vdp1PolygonDraw(ram, regs, back_framebuffer);
+            VIDCore->Vdp1PolygonDraw(ram, regs, back_framebuffer, wireframe);
             break;
          case 5: // polyline draw
          case 7: // undocumented mirror

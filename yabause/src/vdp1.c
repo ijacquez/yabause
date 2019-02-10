@@ -876,13 +876,16 @@ void Vdp1DebugCommand(u32 number, char *outstring)
       return;
    }
 
+   AddString(outstring, "Address: 0x%08X\n", 0x25C00000 | addr);
+
    Vdp1ReadCommand(&cmd, addr, Vdp1Ram);
 
    switch (cmd.CMDCTRL & 0x000F)
    {
       case 0:
          AddString(outstring, "Normal Sprite\r\n");
-         AddString(outstring, "x = %d, y = %d\r\n", cmd.CMDXA, cmd.CMDYA);
+         AddString(outstring, "x = %d\n"
+                              "y = %d\r\n", cmd.CMDXA, cmd.CMDYA);
          break;
       case 1:
          AddString(outstring, "Scaled Sprite\r\n");
@@ -926,54 +929,69 @@ void Vdp1DebugCommand(u32 number, char *outstring)
 
          if (((cmd.CMDCTRL >> 8) & 0xF) == 0)
          {
-            AddString(outstring, "xa = %d, ya = %d, xc = %d, yc = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXC, cmd.CMDYC);
+            AddString(outstring, "A: (%d, %d)\r\n"
+                                 "C: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXC, cmd.CMDYC);
          }
          else
          {
-            AddString(outstring, "xa = %d, ya = %d, xb = %d, yb = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
+            AddString(outstring, "A: (%d, %d)\r\n"
+                                 "B: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
          }
 
          break;
       case 2:
          AddString(outstring, "Distorted Sprite\r\n");
-         AddString(outstring, "x1 = %d, y1 = %d, x2 = %d, y2 = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
-         AddString(outstring, "x3 = %d, y3 = %d, x4 = %d, y4 = %d\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
+         AddString(outstring, "A: (%d, %d)\r\n"
+                              "B: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
+         AddString(outstring, "C: (%d, %d)\r\n"
+                              "D: (%d, %d)\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
          break;
       case 3:
          AddString(outstring, "Distorted Sprite *\r\n");
-         AddString(outstring, "x1 = %d, y1 = %d, x2 = %d, y2 = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
-         AddString(outstring, "x3 = %d, y3 = %d, x4 = %d, y4 = %d\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
+         AddString(outstring, "A: (%d, %d)\r\n"
+                              "B: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
+         AddString(outstring, "C: (%d, %d)\r\n"
+                              "D: (%d, %d)\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
          break;
       case 4:
          AddString(outstring, "Polygon\r\n");
-         AddString(outstring, "x1 = %d, y1 = %d, x2 = %d, y2 = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
-         AddString(outstring, "x3 = %d, y3 = %d, x4 = %d, y4 = %d\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
+         AddString(outstring, "A: (%d, %d)\r\n"
+                              "B: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
+         AddString(outstring, "C: (%d, %d)\r\n"
+                              "D: (%d, %d)\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
          break;
       case 5:
          AddString(outstring, "Polyline\r\n");
-         AddString(outstring, "x1 = %d, y1 = %d, x2 = %d, y2 = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
-         AddString(outstring, "x3 = %d, y3 = %d, x4 = %d, y4 = %d\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
+         AddString(outstring, "A: (%d, %d)\r\n"
+                              "B: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
+         AddString(outstring, "C: (%d, %d)\r\n"
+                              "D: (%d, %d)\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
          break;
       case 6:
          AddString(outstring, "Line\r\n");
-         AddString(outstring, "x1 = %d, y1 = %d, x2 = %d, y2 = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
+         AddString(outstring, "A: (%d, %d)\r\n"
+                              "B: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
          break;
       case 7:
          AddString(outstring, "Polyline *\r\n");
-         AddString(outstring, "x1 = %d, y1 = %d, x2 = %d, y2 = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
-         AddString(outstring, "x3 = %d, y3 = %d, x4 = %d, y4 = %d\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
+         AddString(outstring, "A: (%d, %d)\r\n"
+                              "B: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXB, cmd.CMDYB);
+         AddString(outstring, "C: (%d, %d)\r\n"
+                              "D: (%d, %d)\r\n", cmd.CMDXC, cmd.CMDYC, cmd.CMDXD, cmd.CMDYD);
          break;
       case 8:
          AddString(outstring, "User Clipping\r\n");
-         AddString(outstring, "x1 = %d, y1 = %d, x2 = %d, y2 = %d\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXC, cmd.CMDYC);
+         AddString(outstring, "A: (%d, %d)\r\n"
+                              "C: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA, cmd.CMDXC, cmd.CMDYC);
          break;
       case 9:
          AddString(outstring, "System Clipping\r\n");
-         AddString(outstring, "x1 = 0, y1 = 0, x2 = %d, y2 = %d\r\n", cmd.CMDXC, cmd.CMDYC);
+         AddString(outstring, "   (0, 0)\r\n"
+                              "C: (%d, %d)\r\n", cmd.CMDXC, cmd.CMDYC);
          break;
       case 10:
          AddString(outstring, "Local Coordinates\r\n");
-         AddString(outstring, "x = %d, y = %d\r\n", cmd.CMDXA, cmd.CMDYA);
+         AddString(outstring, "A: (%d, %d)\r\n", cmd.CMDXA, cmd.CMDYA);
          break;
       default:
          AddString(outstring, "Invalid command\r\n");
@@ -1110,6 +1128,38 @@ void Vdp1DebugCommand(u32 number, char *outstring)
             break;
          default: break;
       }
+
+      AddString(outstring, "\r\nRaw command table\r\n"
+                           "CMDCTRL: 0x%04X\r\n"
+                           "CMDLINK: 0x%04X\r\n"
+                           "CMDPMOD: 0x%04X\r\n"
+                           "CMDCOLR: 0x%04X\r\n"
+                           "CMDSRCA: 0x%04X\r\n"
+                           "CMDSIZE: 0x%04X\r\n"
+                           "CMDXA:   0x%04X\r\n"
+                           "CMDYA:   0x%04X\r\n"
+                           "CMDXB:   0x%04X\r\n"
+                           "CMDYB:   0x%04X\r\n"
+                           "CMDXC:   0x%04X\r\n"
+                           "CMDYC:   0x%04X\r\n"
+                           "CMDXD:   0x%04X\r\n"
+                           "CMDYD:   0x%04X\r\n"
+                           "CMDGRDA: 0x%04X",
+          cmd.CMDCTRL,
+          cmd.CMDLINK,
+          cmd.CMDPMOD,
+          cmd.CMDCOLR,
+          cmd.CMDSRCA,
+          cmd.CMDSIZE,
+          cmd.CMDXA,
+          cmd.CMDYA,
+          cmd.CMDXB,
+          cmd.CMDYB,
+          cmd.CMDXC,
+          cmd.CMDYC,
+          cmd.CMDXD,
+          cmd.CMDYD,
+          cmd.CMDGRDA);
    }
 }
 

@@ -129,6 +129,7 @@ void print_usage(const char *program_name) {
    printf("   -ns        --nosound              turn sound off\n");
    printf("   -a         --autostart            autostart emulation\n");
    printf("   -f         --fullscreen           start in fullscreen mode\n");
+   printf("   -B         --msh2-code-bp=ADDRESS add code breakpoint\n");
 }
 #endif
 

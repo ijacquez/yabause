@@ -27,6 +27,7 @@ namespace Arguments
 	void fullscreen(const QString& param);
 	void help(const QString& param);
 	void iso(const QString& param);
+    	void msh2_codebp(const QString& param);
 	void nobios(const QString& param);
 	void nosound(const QString& param);
 	void version(const QString& param);
@@ -54,6 +55,7 @@ namespace Arguments
 		{ "-f",  "--fullscreen", NULL,      "Start the emulator in fullscreen.",                  5, fullscreen },
 		{ "-h",  "--help", NULL,            "Show this help and exit.",                           0, help },
 		{ "-i",  "--iso=", "<ISO>",         "Choose a dump file.",                                4, iso },
+                { "-B",  "--msh2-code-bp=", "ADDRESS[,ADDRESS]", "Add code breakpoint(s).",               4, msh2_codebp },
                 { "-nb", "--no-bios", NULL,         "Use the emulated bios",                              3, nobios },
                 { "-ns", "--no-sound", NULL,        "Turns sound off.",                                   6, nosound },
 		{ "-v",  "--version", NULL,         "Show version and exit.",                             0, version },
@@ -185,6 +187,27 @@ namespace Arguments
 		VolatileSettings * vs = QtYabause::volatileSettings();
 		vs->setValue( "General/CdRom", CDCORE_ISO );
 		vs->setValue( "General/CdRomISO", param );
+	}
+
+	void msh2_codebp(const QString& param)
+	{
+            QStringList addrStringList = param.split(",", QString::SkipEmptyParts);
+
+            QList<QVariant> addresses;
+
+            QStringList::const_iterator addrStringListItr;
+            for (addrStringListItr = addrStringList.constBegin();
+                 addrStringListItr != addrStringList.constEnd();
+                 ++addrStringListItr) {
+                const QString& str = (*addrStringListItr);
+
+                addresses.push_back(str.toUInt(NULL, 0));
+            }
+
+            VolatileSettings * vs = QtYabause::volatileSettings();
+
+            vs->setValue("debugger/msh2", addresses.count());
+            vs->setValue("debugger/msh2/code/addresses", addresses);
 	}
 
 	void nobios(const QString& param)

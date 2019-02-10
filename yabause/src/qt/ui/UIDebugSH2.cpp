@@ -30,7 +30,7 @@ int SH2Dis(SH2_struct *context, u32 addr, char *string)
    return 2;
 }
 
-void SH2BreakpointHandler (SH2_struct *context, u32 addr, void *userdata)
+void UIDebugSH2::SH2BreakpointHandler (SH2_struct *context, u32 addr, void *userdata)
 {
    UIYabause* ui = QtYabause::mainWindow( false );
 

@@ -24,6 +24,8 @@
 #include "ui/UIPortManager.h"
 #include "ui/UIYabause.h"
 
+#include "UIDebugSH2.h"
+
 #include "../peripheral.h"
 
 #include <QDateTime>
@@ -118,6 +120,23 @@ bool YabauseThread::pauseEmulation( bool pause, bool reset )
 		}
 		vs->setValue("autostart", false);
 	}
+
+        if ((vs->value("debugger/msh2").toInt()) > 0)
+        {
+            SH2SetBreakpointCallBack(MSH2, (void (*)(void *, u32, void *))UIDebugSH2::SH2BreakpointHandler, NULL);
+
+            const QList<QVariant> addresses = vs->value("debugger/msh2/code/addresses").toList();
+
+            QList<QVariant>::const_iterator addressesItr;
+            for (addressesItr = addresses.constBegin(); addressesItr != addresses.constEnd();
+                 ++addressesItr) {
+                const QVariant& address = (*addressesItr);
+
+                SH2AddCodeBreakpoint(MSH2, address.toInt());
+            }
+
+            vs->setValue("debugger/msh2", 0);
+        }
 
 	emit this->pause( mPause );
 	

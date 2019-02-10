@@ -42,6 +42,11 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="font">
+           <font>
+            <family>Courier 10 Pitch</family>
+           </font>
+          </property>
           <property name="readOnly">
            <bool>true</bool>
           </property>

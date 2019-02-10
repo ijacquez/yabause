@@ -1151,14 +1151,14 @@ void Vdp1DebugCommand(u32 number, char *outstring)
           cmd.CMDCOLR,
           cmd.CMDSRCA,
           cmd.CMDSIZE,
-          cmd.CMDXA,
-          cmd.CMDYA,
-          cmd.CMDXB,
-          cmd.CMDYB,
-          cmd.CMDXC,
-          cmd.CMDYC,
-          cmd.CMDXD,
-          cmd.CMDYD,
+          cmd.CMDXA & 0xFFFF,
+          cmd.CMDYA & 0xFFFF,
+          cmd.CMDXB & 0xFFFF,
+          cmd.CMDYB & 0xFFFF,
+          cmd.CMDXC & 0xFFFF,
+          cmd.CMDYC & 0xFFFF,
+          cmd.CMDXD & 0xFFFF,
+          cmd.CMDYD & 0xFFFF,
           cmd.CMDGRDA);
    }
 }

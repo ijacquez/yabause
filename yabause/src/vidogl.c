@@ -68,7 +68,7 @@ void VIDOGLDeInit(void);
 void VIDOGLResize(unsigned int, unsigned int, int);
 int VIDOGLIsFullscreen(void);
 int VIDOGLVdp1Reset(void);
-void VIDOGLVdp1DrawStart(void);
+void VIDOGLVdp1DrawStart(bool wireframe);
 void VIDOGLVdp1DrawEnd(void);
 void VIDOGLVdp1NormalSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDOGLVdp1ScaledSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
@@ -3084,7 +3084,7 @@ int VIDOGLVdp1Reset(void)
 
 //////////////////////////////////////////////////////////////////////////////
 
-void VIDOGLVdp1DrawStart(void)
+void VIDOGLVdp1DrawStart(bool wireframe)
 {
    int i;
    int maxpri;
@@ -3151,7 +3151,7 @@ void VIDOGLVdp1DrawStart(void)
    else // color offset disable
       vdp1cor = vdp1cog = vdp1cob = 0;
 
-   Vdp1DrawCommands(Vdp1Ram, Vdp1Regs, NULL, true);
+   Vdp1DrawCommands(Vdp1Ram, Vdp1Regs, NULL, wireframe);
 }
 
 //////////////////////////////////////////////////////////////////////////////

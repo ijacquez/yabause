@@ -36,6 +36,7 @@ protected:
 protected slots:
    void on_lwCommandList_itemSelectionChanged ();
    void on_pbSaveBitmap_clicked ();
+   void on_cbWireframe_toggled(bool checked);
 
 };
 

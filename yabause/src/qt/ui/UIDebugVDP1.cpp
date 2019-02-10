@@ -18,9 +18,12 @@
 */
 #include "UIDebugVDP1.h"
 #include "CommonDialogs.h"
+#include "../QtYabause.h"
 
 #include <QImageWriter>
 #include <QGraphicsPixmapItem>
+
+static bool _cbWireframe = false;
 
 UIDebugVDP1::UIDebugVDP1( QWidget* p )
 	: QDialog( p )
@@ -30,6 +33,8 @@ UIDebugVDP1::UIDebugVDP1( QWidget* p )
 
    QGraphicsScene *scene=new QGraphicsScene(this);
    gvTexture->setScene(scene);
+
+   cbWireframe->setChecked(_cbWireframe);
 
    lwCommandList->clear();
 
@@ -108,4 +113,11 @@ void UIDebugVDP1::on_pbSaveBitmap_clicked ()
 	if ( !s.isEmpty() )
 		if ( !img.save( s ) )
 			CommonDialogs::information( QtYabause::translate( "An error occured while writing file." ) );
+}
+
+void UIDebugVDP1::on_cbWireframe_toggled (bool checked)
+{
+    VDP1SetWireframe(checked);
+    cbWireframe->setChecked(checked);
+    _cbWireframe = checked;
 }

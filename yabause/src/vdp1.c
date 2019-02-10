@@ -628,7 +628,7 @@ void Vdp1Draw(void)
    /* this should be done after a frame change or a plot trigger */
    Vdp1Regs->COPR = 0;
 
-   VIDCore->Vdp1DrawStart();
+   VIDCore->Vdp1DrawStart(Vdp1External.wireframe);
 
    // we set two bits to 1
    Vdp1Regs->EDSR |= 2;
@@ -1536,6 +1536,11 @@ u32 *Vdp1DebugTexture(u32 number, int *w, int *h)
 void ToggleVDP1(void)
 {
    Vdp1External.disptoggle ^= 1;
+}
+
+void VDP1SetWireframe(bool toggle)
+{
+   Vdp1External.wireframe = (int)toggle;
 }
 
 //////////////////////////////////////////////////////////////////////////////

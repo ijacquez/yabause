@@ -68,7 +68,7 @@ typedef struct
    int (*IsFullscreen)(void);
    // VDP1 specific
    int (*Vdp1Reset)(void);
-   void (*Vdp1DrawStart)(void);
+   void (*Vdp1DrawStart)(bool wireframe);
    void (*Vdp1DrawEnd)(void);
    void(*Vdp1NormalSpriteDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
    void(*Vdp1ScaledSpriteDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
@@ -132,6 +132,7 @@ typedef struct {
    int disptoggle;
    int manualerase;
    int manualchange;
+   int wireframe;
 } Vdp1External_struct;
 
 extern Vdp1External_struct Vdp1External;
@@ -187,6 +188,7 @@ void Vdp1DebugGetCommandNumberName(u32 number, char *outstring);
 void Vdp1DebugCommand(u32 number, char *outstring);
 u32 *Vdp1DebugTexture(u32 number, int *w, int *h);
 void ToggleVDP1(void);
+void VDP1SetWireframe(bool toggle);
 
 void VideoDisableGL(void);
 

@@ -32,6 +32,7 @@ public:
 protected:
    YabauseThread *mYabauseThread;
    bool areSettingsValid();
+   void setAreaStartEndAddresses(int startAddress, int size);
 
 protected slots:
     void on_leFile_textChanged( const QString & text );
@@ -39,6 +40,16 @@ protected slots:
     void on_leEndAddress_textChanged( const QString & text );
     void on_rbUpload_toggled(bool checked);
     void on_tbBrowse_clicked();
+    void on_rbAreaLWRAM_toggled(bool checked);
+    void on_rbAreaHWRAM_toggled(bool checked);
+    void on_rbAreaBIOS_toggled(bool checked);
+    void on_rbAreaVDP1FB_toggled(bool checked);
+    void on_rbAreaVDP1VRAM_toggled(bool checked);
+    void on_rbAreaVDP2CRAM_toggled(bool checked);
+    void on_rbAreaVDP2VRAMBankA0_toggled(bool checked);
+    void on_rbAreaVDP2VRAMBankA1_toggled(bool checked);
+    void on_rbAreaVDP2VRAMBankB0_toggled(bool checked);
+    void on_rbAreaVDP2VRAMBankB1_toggled(bool checked);
 	 void accept();
 };
 

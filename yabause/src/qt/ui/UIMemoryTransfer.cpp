@@ -95,6 +95,132 @@ void UIMemoryTransfer::on_rbUpload_toggled(bool checked)
    dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());   
 }
 
+void UIMemoryTransfer::setAreaStartEndAddresses(int startAddress, int size)
+{
+        leStartAddress->setText(QString::number(startAddress, 16));
+        leEndAddress->setText(QString::number(startAddress + size, 16));
+}
+
+void UIMemoryTransfer::on_rbAreaLWRAM_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x00200000, 0x100000);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaHWRAM_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x06000000, 0x100000);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaBIOS_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x00000000, 524288);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaVDP1FB_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x05C80000, 262144);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaVDP1VRAM_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x05C00000, 524288);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaVDP2CRAM_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x05F00000, 4096);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaVDP2VRAMBankA0_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x05E00000, 131072);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaVDP2VRAMBankA1_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x05E20000, 131072);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaVDP2VRAMBankB0_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x05E40000, 131072);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
+void UIMemoryTransfer::on_rbAreaVDP2VRAMBankB1_toggled(bool checked)
+{
+    if (checked)
+    {
+        setAreaStartEndAddresses(0x05E60000, 131072);
+	leStartAddress->setEnabled(true);
+        leEndAddress->setEnabled(true);
+        cbPC->setEnabled(false);
+        dbbButtons->button(QDialogButtonBox::Ok)->setEnabled(areSettingsValid());
+    }
+}
+
 void UIMemoryTransfer::on_tbBrowse_clicked()
 {
    if (rbDownload->isChecked())

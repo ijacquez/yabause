@@ -76,7 +76,7 @@ void VIDOGLVdp1DistortedSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDOGLVdp1PolygonDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDOGLVdp1PolylineDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDOGLVdp1LineDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
-void VIDOGLVdp1UserClipping(u8 * ram, Vdp1 * regs);
+void VIDOGLVdp1UserClipping(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
 void VIDOGLVdp1SystemClipping(u8 * ram, Vdp1 * regs);
 void VIDOGLVdp1LocalCoordinate(u8 * ram, Vdp1 * regs);
 int VIDOGLVdp2Reset(void);
@@ -4283,7 +4283,7 @@ void VIDOGLVdp1LineDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer)
 
 //////////////////////////////////////////////////////////////////////////////
 
-void VIDOGLVdp1UserClipping(u8 * ram, Vdp1 * regs)
+void VIDOGLVdp1UserClipping(u8 * ram, Vdp1 * regs, u8 * back_framebuffer)
 {
    Vdp1Regs->userclipX1 = T1ReadWord(Vdp1Ram, Vdp1Regs->addr + 0xC);
    Vdp1Regs->userclipY1 = T1ReadWord(Vdp1Ram, Vdp1Regs->addr + 0xE);

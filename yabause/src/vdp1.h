@@ -76,7 +76,7 @@ typedef struct
    void(*Vdp1PolygonDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer, bool wireframe);
    void(*Vdp1PolylineDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
    void(*Vdp1LineDraw)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
-   void(*Vdp1UserClipping)(u8 * ram, Vdp1 * regs);
+   void(*Vdp1UserClipping)(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
    void(*Vdp1SystemClipping)(u8 * ram, Vdp1 * regs);
    void(*Vdp1LocalCoordinate)(u8 * ram, Vdp1 * regs);
    void(*Vdp1ReadFrameBuffer)(u32 type, u32 addr, void * out);
@@ -123,7 +123,7 @@ void FASTCALL Sh2Vdp1FrameBufferWriteWord(SH2_struct *sh, u32, u16);
 void FASTCALL Sh2Vdp1FrameBufferWriteLong(SH2_struct *sh, u32, u32);
 
 void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wireframe);
-void Vdp1FakeDrawCommands(u8 * ram, Vdp1 * regs);
+void Vdp1FakeDrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 
 extern Vdp1 * Vdp1Regs;
 

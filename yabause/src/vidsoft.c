@@ -86,7 +86,7 @@ void VIDSoftVdp1DistortedSpriteDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer,
 void VIDSoftVdp1PolygonDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wireframe);
 void VIDSoftVdp1PolylineDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
 void VIDSoftVdp1LineDraw(u8 * ram, Vdp1 * regs, u8* back_framebuffer);
-void VIDSoftVdp1UserClipping(u8 * ram, Vdp1 * regs);
+void VIDSoftVdp1UserClipping(u8 * ram, Vdp1 * regs, u8 * back_framebuffer);
 void VIDSoftVdp1SystemClipping(u8 * ram, Vdp1 * regs);
 void VIDSoftVdp1LocalCoordinate(u8 * ram, Vdp1 * regs);
 void VIDSoftVdp1ReadFrameBuffer(u32 type, u32 addr, void * out);
@@ -2448,7 +2448,7 @@ void VIDSoftVdp1DrawStart(bool wireframe)
       vidsoft_vdp1_thread_context.need_draw = 1;
       YabThreadWake(YAB_THREAD_VIDSOFT_VDP1);
 
-      Vdp1FakeDrawCommands(Vdp1Ram, Vdp1Regs);
+      Vdp1FakeDrawCommands(Vdp1Ram, Vdp1Regs, vdp1backframebuffer);
    }
    else
    {
@@ -3437,12 +3437,30 @@ void VIDSoftVdp1LineDraw(u8* ram, Vdp1*regs, u8* back_framebuffer)
 
 //////////////////////////////////////////////////////////////////////////////
 
-void VIDSoftVdp1UserClipping(u8* ram, Vdp1*regs)
+void VIDSoftVdp1UserClipping(u8* ram, Vdp1*regs, u8 * back_framebuffer)
 {
-   regs->userclipX1 = T1ReadWord(ram, regs->addr + 0xC);
-   regs->userclipY1 = T1ReadWord(ram, regs->addr + 0xE);
-   regs->userclipX2 = T1ReadWord(ram, regs->addr + 0x14);
-   regs->userclipY2 = T1ReadWord(ram, regs->addr + 0x16);
+        vdp1cmd_struct cmd;
+
+        Vdp1ReadCommand(&cmd, regs->addr, ram);
+
+	int x1, y1, x2, y2;
+
+        x1 = T1ReadWord(ram, regs->addr + 0xC);
+        y1 = T1ReadWord(ram, regs->addr + 0xE);
+        x2 = T1ReadWord(ram, regs->addr + 0x14);
+        y2 = T1ReadWord(ram, regs->addr + 0x16);
+        
+   regs->userclipX1 = x1;
+   regs->userclipY1 = y1;
+   regs->userclipX2 = x2;
+   regs->userclipY2 = y2;
+
+   double redstep = 1, greenstep = 0, bluestep = 0;
+
+   DrawLine(x1, y1, x2, y1, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
+   DrawLine(x2, y1, x2, y2, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
+   DrawLine(x2, y2, x1, y2, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
+   DrawLine(x1, y2, x1, y1, 0, 0, 0, redstep, greenstep, bluestep, regs, &cmd, ram, back_framebuffer);
 }
 
 //////////////////////////////////////////////////////////////////////////////

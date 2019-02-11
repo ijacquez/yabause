@@ -494,7 +494,7 @@ void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wirefram
             break;
          case 8: // user clipping coordinates
          case 11: // undocumented mirror
-            VIDCore->Vdp1UserClipping(ram, regs);
+            VIDCore->Vdp1UserClipping(ram, regs, back_framebuffer);
             break;
          case 9: // system clipping coordinates
             VIDCore->Vdp1SystemClipping(ram, regs);
@@ -542,7 +542,7 @@ void Vdp1DrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer, bool wirefram
 }
 
 //ensure that registers are set correctly 
-void Vdp1FakeDrawCommands(u8 * ram, Vdp1 * regs)
+void Vdp1FakeDrawCommands(u8 * ram, Vdp1 * regs, u8* back_framebuffer)
 {
    u16 command = T1ReadWord(ram, regs->addr);
    u32 commandCounter = 0;
@@ -564,7 +564,7 @@ void Vdp1FakeDrawCommands(u8 * ram, Vdp1 * regs)
             break;
          case 8: // user clipping coordinates
          case 11: // undocumented mirror
-            VIDCore->Vdp1UserClipping(ram, regs);
+            VIDCore->Vdp1UserClipping(ram, regs, back_framebuffer);
             break;
          case 9: // system clipping coordinates
             VIDCore->Vdp1SystemClipping(ram, regs);
@@ -647,7 +647,7 @@ void Vdp1NoDraw(void) {
    /* this should be done after a frame change or a plot trigger */
    Vdp1Regs->COPR = 0;
 
-   Vdp1FakeDrawCommands(Vdp1Ram, Vdp1Regs);
+   Vdp1FakeDrawCommands(Vdp1Ram, Vdp1Regs, VIDCore->Vdp1ReadFrameBuffer);
 
    // we set two bits to 1
    Vdp1Regs->EDSR |= 2;
